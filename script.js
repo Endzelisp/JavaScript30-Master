@@ -33,18 +33,17 @@ function keyCode (key) {
 }
 
 function playAudio(e) {
-  console.log(e.keyCode)
-  const keyValue = keyCode(e.key)
+  const keyValue = keyCode(e.key) | e;
   const audio = document.querySelector(`audio[data-key="${keyValue}"]`);
   audio.currentTime = 0;
   audio.play();
 };
 
 function addEffect(e) {
-  const keyValue = keyCode(e.key)
+  const keyValue = keyCode(e.key) | e;
   const keyLight = document.querySelector(`div[data-key="${keyValue}"]`);
   keyLight.classList.add('playing')
-  addEventListener('keyup', () => {
+  addEventListener('transitionend', () => {
     keyLight.classList.remove('playing')
   })
 }
@@ -53,3 +52,13 @@ window.addEventListener('keydown', (e) => {
   playAudio(e)
   addEffect(e)
 });
+
+const keyElements = document.querySelectorAll('.key')
+
+keyElements.forEach(item => {
+  let attribueValue = item.getAttribute('data-key')
+  item.addEventListener('click', () => {
+    playAudio(attribueValue)
+    addEffect(attribueValue)
+  })
+})
